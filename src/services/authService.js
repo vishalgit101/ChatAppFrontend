@@ -170,6 +170,16 @@ const fetchPrivateMessages = async (user2) => {
   }
 };
 
+const getOnlineUsers = async () => {
+  try {
+    const response = await api.get("/auth/getonlineusers");
+    return response.data;
+  } catch (error) {
+    console.error("Error in fetching online users", error);
+    throw error;
+  }
+};
+
 export const authService = {
   // dont login() or signup() etc cos these will be called immediately
   login: login,
@@ -179,4 +189,5 @@ export const authService = {
   getCurrentUser: getCurrentUser,
   isAuthenticated: isAuthenticated,
   fetchPrivateMessages: fetchPrivateMessages,
+  getOnlineUsers: getOnlineUsers,
 };
