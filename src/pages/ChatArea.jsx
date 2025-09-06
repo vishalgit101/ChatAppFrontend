@@ -3,7 +3,7 @@ import { authService, authService as result } from "../services/authService";
 import { useEffect, useRef, useState } from "react";
 import SockJS from "sockjs-client";
 import { Stomp } from "@stomp/stompjs";
-import PrivateChat from ".PrivateChat/";
+import PrivateChat from "./PrivateChat";
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 const ChatArea = () => {
@@ -23,7 +23,7 @@ const ChatArea = () => {
   const [isTyping, setIsTyping] = useState("");
   const [privateChat, setPrivateChat] = useState(new Map());
   const [unreadMessages, setUnreadMessages] = useState(new Map());
-  const [onlineUsers, setOnlineUsers] = useState(new Map());
+  const [onlineUsers, setOnlineUsers] = useState(new Set()); // should be set
   const privateMessageHandlers = useRef(new Map());
   const stompClient = useRef(null);
   const messagesEndRef = useRef(null);
@@ -57,6 +57,7 @@ const ChatArea = () => {
   ];
 
   if (!currentUser) {
+    // returns null if the current user dose not exist
     return null;
   }
 
@@ -140,7 +141,7 @@ const ChatArea = () => {
               const privateMessage = JSON.parse(msg.body);
               const otherUser =
                 privateMessage.sender === username
-                  ? privateMessage.recepient
+                  ? privateMessage.recipient
                   : privateMessage.sender;
 
               const handler = privateMessageHandlers.current.get(otherUser);
@@ -151,7 +152,7 @@ const ChatArea = () => {
                 } catch (error) {
                   console.error("Error calling handler", error);
                 }
-              } else if (privateMessage.recepient === username) {
+              } else if (privateMessage.recipient === username) {
                 setUnreadMessages((prev) => {
                   const newUnread = new Map();
                   const currentCount = newUnread.get(otherUser) || 0;
@@ -416,7 +417,7 @@ const ChatArea = () => {
         <PrivateChat
           key={otherUser}
           currentUser={username}
-          recepientUser={otherUser}
+          recipientUser={otherUser}
           userColor={userColor}
           stompClient={stompClient}
           onClose={() => closePrivateChat(otherUser)}

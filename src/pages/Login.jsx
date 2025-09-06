@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authServive } from "../services/authService";
+import { authService } from "../services/authService";
 const Login = () => {
   // definie states, varibales and functions
   const [username, setUsername] = useState("");
@@ -16,7 +16,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const result = await authServive.Login(username, password); // we are using email as username for our app
+      const result = await authService.login(username, password); // we are using email as username for our app
       if (result.success) {
         setMessage("Login Successful");
         setTimeout(() => {

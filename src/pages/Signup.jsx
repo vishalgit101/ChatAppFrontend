@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authServive } from "../services/authService";
+import { authService } from "../services/authService";
 const Signup = () => {
   // definie states, varibales and functions
   const [username, setUsername] = useState("");
@@ -16,7 +16,7 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      const result = await authServive.signup(username, email, password);
+      const result = await authService.signup(username, email, password);
       if (result.success) {
         setMessage("Account Created Successfully! Please login");
         setTimeout(() => {
